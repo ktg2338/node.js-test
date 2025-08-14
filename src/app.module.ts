@@ -1,18 +1,23 @@
-import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { SqliteDriver } from '@mikro-orm/sqlite';
-import { PostsModule } from './posts/posts.module';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { Module } from '@nestjs/common';
+
+import { Post, Tag, User } from './entities';
 
 @Module({
   imports: [
     MikroOrmModule.forRoot({
-      entities: ['./dist/**/*.entity.js'],
-      dbName: 'test.db',
-      driver: SqliteDriver,
+      driver: PostgreSqlDriver,
+      entities: [User, Post, Tag],
+      dbName: 'test',
+      host: 'localhost',
+      port: 5432,
+      user: 'postgres',
+      password: 'postgres',
       autoLoadEntities: true,
       synchronize: true,
     }),
-    PostsModule,
+    MikroOrmModule.forFeature([User, Post, Tag]),
   ],
 })
 export class AppModule {}
