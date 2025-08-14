@@ -1,11 +1,11 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Module } from '@nestjs/common';
 
-import { Post, Tag, User } from './entities';
+import { PostModule } from './post/post.module';
+import { TagModule } from './tag/tag.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [
-    MikroOrmModule.forRoot()],
+  imports: [MikroOrmModule.forRoot(), PostModule, TagModule, UserModule],
 })
 export class AppModule {}

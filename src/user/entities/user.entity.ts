@@ -1,6 +1,6 @@
 import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 
-import { Post } from './post.entity';
+import { Post } from '../../post/entities/post.entity';
 
 @Entity()
 export class User {

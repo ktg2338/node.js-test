@@ -1,7 +1,7 @@
 import { Collection, Entity, ManyToMany, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 
-import { Tag } from './tag.entity';
-import { User } from './user.entity';
+import { Tag } from '../../tag/entities/tag.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Post {
