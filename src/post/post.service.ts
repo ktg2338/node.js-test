@@ -3,6 +3,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { SearchPostDto } from './dto/search-post.dto';
 import { Post } from './entities/post.entity';
 import { Tag } from '../tag/entities/tag.entity';
 import { User } from '../user/entities/user.entity';
@@ -27,6 +28,33 @@ export class PostService {
 
   findOne(id: number) {
     return this.em.findOne(Post, id, { populate: ['author', 'tags'] });
+  }
+
+  async search({ title, authorName, tagNames }: SearchPostDto) {
+    const qb = this.em
+      .createQueryBuilder(Post, 'p')
+      .leftJoinAndSelect('p.author', 'a')
+      .leftJoinAndSelect('p.tags', 't')
+      .distinct();
+
+    if (title) {
+      qb.where('p.title ilike ?', [`%${title}%`]);
+    }
+    if (authorName) {
+      qb.andWhere('a.name ilike ?', [`%${authorName}%`]);
+    }
+    if (tagNames?.length) {
+      const subQuery =
+        'select pt.post_id from post_tags pt ' +
+        'join tag t2 on t2.id = pt.tag_id ' +
+        'where t2.name in (?) ' +
+        'group by pt.post_id ' +
+        'having count(distinct t2.id) = ?';
+
+      qb.andWhere(`p.id in (${subQuery})`, [tagNames, tagNames.length]);
+    }
+
+    return qb.getResultList();
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
