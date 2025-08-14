@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityManager } from '@mikro-orm/postgresql';
+
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -8,7 +10,7 @@ describe('UserController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UserService],
+      providers: [UserService, { provide: EntityManager, useValue: {} }],
     }).compile();
 
     controller = module.get<UserController>(UserController);

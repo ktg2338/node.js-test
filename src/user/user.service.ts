@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from '@mikro-orm/postgresql';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly em: EntityManager) {}
+
+  async create(createUserDto: CreateUserDto) {
+    const user = this.em.create(User, createUserDto);
+    await this.em.persistAndFlush(user);
+    return user;
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.em.find(User, {}, { populate: ['posts', 'posts.tags'], orderBy: { name: 'asc' } });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.em.findOne(User, id, { populate: ['posts', 'posts.tags'] });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.em.findOneOrFail(User, id);
+    this.em.assign(user, updateUserDto);
+    await this.em.flush();
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.em.findOneOrFail(User, id);
+    await this.em.removeAndFlush(user);
+    return user;
   }
 }

@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from '@mikro-orm/postgresql';
+
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
+import { Tag } from './entities/tag.entity';
 
 @Injectable()
 export class TagService {
-  create(createTagDto: CreateTagDto) {
-    return 'This action adds a new tag';
+  constructor(private readonly em: EntityManager) {}
+
+  async create(createTagDto: CreateTagDto) {
+    const tag = this.em.create(Tag, createTagDto);
+    await this.em.persistAndFlush(tag);
+    return tag;
   }
 
   findAll() {
-    return `This action returns all tag`;
+    return this.em.find(Tag, {}, { populate: ['posts', 'posts.author'] });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} tag`;
+    return this.em.findOne(Tag, id, { populate: ['posts', 'posts.author'] });
   }
 
-  update(id: number, updateTagDto: UpdateTagDto) {
-    return `This action updates a #${id} tag`;
+  async update(id: number, updateTagDto: UpdateTagDto) {
+    const tag = await this.em.findOneOrFail(Tag, id);
+    this.em.assign(tag, updateTagDto);
+    await this.em.flush();
+    return tag;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tag`;
+  async remove(id: number) {
+    const tag = await this.em.findOneOrFail(Tag, id);
+    await this.em.removeAndFlush(tag);
+    return tag;
   }
 }
