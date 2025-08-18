@@ -1,6 +1,7 @@
 // mikro-orm.config.ts
 import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig } from '@mikro-orm/postgresql';
+import 'reflect-metadata';
 
 export default defineConfig({
   dbName: 'postgres',

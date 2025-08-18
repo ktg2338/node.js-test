@@ -5,6 +5,8 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorator/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +28,8 @@ export class AuthController {
     return { access_token };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin') // 'Admin' 역할을 가진 사용자만 접근 가능
   @Get('me')
   profile(@Req() req: any) {
     // JwtStrategy.validate 반환값이 req.user 로 들어옴

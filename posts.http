@@ -14,3 +14,9 @@ Content-Type: application/json
   "name": "123",
   "password": "123"
 }
+
+###
+GET http://localhost:3000/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoiMTIzIiwicm9sZXMiOlsiYWRtaW4iXSwiaWF0IjoxNzU1NDkxMzkxLCJleHAiOjE3NTU0OTQ5OTF9.xH5vS01DXvvTd7KGIDijGUYAWXzyG85KdNLRiIlyD6I
+
+###
