@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { TagController } from './tag.controller';
 import { TagService } from './tag.service';

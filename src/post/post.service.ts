@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
 
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { SearchPostDto } from './dto/search-post.dto';
-import { Post } from './entities/post.entity';
 import { Tag } from '../tag/entities/tag.entity';
 import { User } from '../user/entities/user.entity';
+import { CreatePostDto } from './dto/create-post.dto';
+import { SearchPostDto } from './dto/search-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostService {
@@ -64,9 +64,7 @@ export class PostService {
     }
     if (updatePostDto.tagIds) {
       post.tags.removeAll();
-      const tags = updatePostDto.tagIds.map((id) =>
-        this.em.getReference(Tag, id),
-      );
+      const tags = updatePostDto.tagIds.map((id) => this.em.getReference(Tag, id));
       tags.forEach((tag) => post.tags.add(tag));
     }
     this.em.assign(post, updatePostDto);

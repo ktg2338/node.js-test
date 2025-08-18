@@ -10,6 +10,9 @@ export class User {
   @Property()
   name!: string;
 
+  @Property({ hidden: true })
+  password!: string;
+
   @OneToMany(() => Post, (post) => post.author)
   posts = new Collection<Post>(this);
 }

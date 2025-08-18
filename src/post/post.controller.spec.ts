@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { PostController } from './post.controller';
 import { PostService } from './post.service';

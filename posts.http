@@ -1,29 +1,16 @@
-### 전체 조회
-GET http://localhost:3000/post
-
-### 단건 조회
-GET http://localhost:3000/post/1
-
-### 검색
-GET http://localhost:3000/post/search?title=Hello&authorName=John&tagNames=Nest&tagNames=JS
-
-### 생성
-POST http://localhost:3000/post
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "title": "Hello REST Client",
-  "authorId": 1,
-  "tagIds": [1, 2]
+  "name": "123",
+  "password": "123"
 }
 
-### 수정
-PATCH http://localhost:3000/post/1
+###
+POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "title": "Updated title"
+  "name": "123",
+  "password": "123"
 }
-
-### 삭제
-DELETE http://localhost:3000/post/1

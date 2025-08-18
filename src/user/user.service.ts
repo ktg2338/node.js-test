@@ -1,5 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { EntityRepository } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,9 +10,15 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly em: EntityManager) {}
+  constructor(
+    private readonly em: EntityManager,
+    @InjectRepository(User)
+    private readonly userRepository: EntityRepository<User>,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const passwordHash = await bcrypt.hash(createUserDto.password, 10);
+    createUserDto.password = passwordHash;
     const user = this.em.create(User, createUserDto);
     await this.em.persistAndFlush(user);
     return user;
@@ -19,8 +28,12 @@ export class UserService {
     return this.em.find(User, {}, { populate: ['posts', 'posts.tags'], orderBy: { name: 'asc' } });
   }
 
-  findOne(id: number) {
-    return this.em.findOne(User, id, { populate: ['posts', 'posts.tags'] });
+  async findOne(id: number) {
+    return this.em.findOneOrFail(User, id, { populate: ['posts', 'posts.tags'] });
+  }
+
+  async findOneByName(name: string) {
+    return this.userRepository.findOne({ name });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
