@@ -74,6 +74,15 @@
           "nullable": false,
           "length": 255,
           "mappedType": "string"
+        },
+        "roles": {
+          "name": "roles",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "array"
         }
       },
       "name": "user",
